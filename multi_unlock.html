@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Love Code 💖</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffe6f0;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  h1 { margin-top: 30px; color: #ff4d6d; }
+
+  .code-box {
+    display: flex; justify-content: center; margin: 20px; gap: 10px;
+  }
+  .digit {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: white; border: 2px solid #ff4d6d;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px; font-weight: bold; color: #ff4d6d;
+  }
+
+  .keypad {
+    display: grid; 
+    grid-template-columns: repeat(3, 80px);
+    gap: 15px; 
+    justify-content: center; 
+    margin-top: 20px;
+    max-width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn {
+    width: 80px; height: 80px; border: none; border-radius: 50%;
+    background: #ff4d6d; color: white; font-size: 24px;
+    cursor: pointer; transition: transform 0.2s;
+  }
+  .btn:active { transform: scale(0.9); }
+
+  .typing {
+    border-right: 2px solid #ff4da6;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    width: 0;
+    animation: typing 3s steps(30, end) forwards, blink 0.7s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  @keyframes blink {
+    50% { border-color: transparent }
+  }
+
+  #heart {
+    font-size: 28px; 
+    font-weight: bold;
+    color: #ff4da6;
+    margin-top: 20px;
+    display: none;
+  }
+
+  .heart {
+    font-size: 100px; 
+    color: #ff4d6d; 
+    margin-top: 20px;
+    display: none; 
+    animation: beat 1s infinite;
+  }
+  @keyframes beat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* ✅ Đảm bảo player nhạc hiện ra */
+  #music {
+    display: block !important;
+    margin: 20px auto;
+  }
+</style>
+</head>
+<body>
+
+<h1>Unlock your special gift 💝</h1>
+
+<div class="code-box">
+  <div class="digit" id="d1"></div>
+  <div class="digit" id="d2"></div>
+  <div class="digit" id="d3"></div>
+  <div class="digit" id="d4"></div>
+</div>
+
+<div class="keypad">
+  <button class="btn" onclick="press(1)">1</button>
+  <button class="btn" onclick="press(2)">2</button>
+  <button class="btn" onclick="press(3)">3</button>
+  <button class="btn" onclick="press(4)">4</button>
+  <button class="btn" onclick="press(5)">5</button>
+  <button class="btn" onclick="press(6)">6</button>
+  <button class="btn" onclick="press(7)">7</button>
+  <button class="btn" onclick="press(8)">8</button>
+  <button class="btn" onclick="press(9)">9</button>
+  <button class="btn" onclick="deleteLast()">⌫</button>
+  <button class="btn" onclick="press(0)">0</button>
+  <button class="btn" onclick="clearInput()">C</button>
+</div>
+
+<div id="heart"></div>
+<div class="heart">❤️</div>
+
+<audio id="music" controls></audio>
+
+<script>
+  // 📌 Danh sách mật khẩu và file nhạc tương ứng
+  const codes = {
+    "2005": { message: "💖 안뇽!! 사랑해!!!!", music: "music2005.mp3" },
+    "2004": { message: "💖 안뇽!! 사랑해!!!!", music: "music2004.mp3" },
+    "1997": { message: "💖 Hello Bae!!!!", music: "music1997.mp3" },
+    "1998": { message: "💖 Tò mò chi vậy!!!", music: "music1998.mp3" },
+    "1999": { message: "💖 ẤN vô tri vậy ? Nghe nhạc đi nhé cưng", music: "music1999.mp3" },
+    "2000": { message: "💖 안뇽! 한국어 할 줄 알으면 나한데 문자를 보내줘!", music: "music2000.mp3" },
+    "2001": { message: "✨ Có vẻ như lâu không gặp rồi nhỉ? Nhớ Tui Không ??!", music: "music2001.mp3" },
+    "2002": { message: "🌸 Đây là bí mật cho 2002!", music: "music2002.mp3" }
+  };
+
+  let input = "";
+
+  function press(num) {
+    if (input.length < 4) {
+      input += num;
+      document.getElementById("d" + input.length).textContent = "•";
+    }
+    if (input.length === 4) {
+      checkPassword();
+    }
+  }
+
+  function deleteLast() {
+    if (input.length > 0) {
+      document.getElementById("d" + input.length).textContent = "";
+      input = input.slice(0, -1);
+    }
+  }
+
+  function checkPassword() {
+    const heart = document.getElementById("heart");
+    const bigHeart = document.querySelector(".heart");
+    const music = document.getElementById("music");
+
+    if (codes[input]) {
+      music.pause();
+      music.currentTime = 0;
+
+      heart.style.display = "block";
+      heart.classList.remove("typing");
+      void heart.offsetWidth;
+      heart.classList.add("typing");
+
+      heart.textContent = codes[input].message;
+      bigHeart.style.display = "block";
+
+      // ✅ Gán file nhạc đúng tên trong thư mục
+      music.src = codes[input].music;
+      music.play().catch(err => alert("Không phát được nhạc: " + err));
+    } else {
+      alert("❌ Ngốc quá!! Sai Mật khẩu rồi!");
+      heart.style.display = "none";
+      bigHeart.style.display = "none";
+    }
+    clearInput();
+  }
+
+  function clearInput() {
+    input = "";
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById("d" + i).textContent = "";
+    }
+  }
+</script>
+
+</body>
+</html>
